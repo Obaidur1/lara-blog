@@ -16,11 +16,17 @@ use Illuminate\Support\Str;
 
 class BlogController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $category = null)
     {
 
-        $blogs = Blog::all();
-        return view('blog.blogs', compact('blogs'));
+        if ($category) {
+            $category_id = Category::where('name', $category)->first()->id;
+            $posts = Blog::with('category')->where('category_id', $category_id)->paginate(6);
+        } else {
+            $posts = Blog::with('category')->latest()->paginate(6);
+            // $posts = DB::table('blogs')->join('categories', 'blogs.category_id', '=', 'categories.id')->get();
+        }
+        return view('blog.homepage', compact('posts'));
     }
     public function show($slug)
     {
