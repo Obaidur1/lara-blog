@@ -12,7 +12,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $posts = Blog::whereBelongsTo($user)->latest()->paginate(6);
+        $posts = Blog::with('category')->whereBelongsTo($user)->latest()->paginate(6);
         return view('dashboard', compact('posts'));
     }
 }

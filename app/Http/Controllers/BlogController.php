@@ -3,15 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
-use App\Models\BlogView;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use Pest\Arch\Objects\FunctionDescription;
 use Illuminate\Support\Str;
 
 class BlogController extends Controller
@@ -40,8 +36,10 @@ class BlogController extends Controller
         $latest_posts = Blog::latest()->limit(6)->get();
         return view('blog.post_details', compact('post', 'related_posts', 'latest_posts'));
     }
-    public function create()
+    public function create(Request $request)
     {
+        $user = $request->user();
+        $this->authorize('create', [Blog::class, $user]);
         return view('blog.create_post');
     }
     public function store(Request $request)
@@ -72,33 +70,27 @@ class BlogController extends Controller
         if (!$post) {
             return abort(404);
         }
-        if ($request->user()->id != $post->user_id) {
-            return abort(403, 'Damn son its not your post!');
-        }
+        $this->authorize('update', $post);
         $categories = Category::all();
         return view('blog.edit_post', compact('post', 'categories'));
     }
     public function update(Request $request, $id)
     {
         $post = Blog::find($id);
-        if ($request->user()->id == $post->user_id) {
-            $post->update([
-                'title' => $request->input('title'),
-                'slug' => $request->input('slug'),
-                'content' => $request->input('content'),
-                'category_id' => $request->input('category_id')
-            ]);
-            if ($request->hasFile('featured')) {
-                $image_name = Str::uuid()->toString() . '.' . $request->file('featured')->extension();
-                $image_path = $request->file('featured')->storeAs('images', $image_name, 'public');
-
-                if ($post->featured) {
-                    Storage::disk('public')->delete($post->featured);
-                }
-                $post->update(['featured' => $image_path]);
+        $this->authorize('update', $post);
+        $post->update([
+            'title' => $request->input('title'),
+            'slug' => $request->input('slug'),
+            'content' => $request->input('content'),
+            'category_id' => $request->input('category_id')
+        ]);
+        if ($request->hasFile('featured')) {
+            $image_name = Str::uuid()->toString() . '.' . $request->file('featured')->extension();
+            $image_path = $request->file('featured')->storeAs('images', $image_name, 'public');
+            if ($post->featured) {
+                Storage::disk('public')->delete($post->featured);
             }
-        } else {
-            return abort(403, 'Hehe you are not lucky bro!');
+            $post->update(['featured' => $image_path]);
         }
         return redirect()->route('dashboard');
     }
@@ -108,9 +100,7 @@ class BlogController extends Controller
         if (!$post) {
             return abort(404);
         }
-        if ($request->user()->id != $post->user_id) {
-            return abort(403, 'Why bro? Be a good person');
-        }
+        $this->authorize('delete', $post);
         if ($post->featured) {
             Storage::disk('public')->delete($post->featured);
         }
