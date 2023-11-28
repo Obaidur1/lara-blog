@@ -126,7 +126,7 @@
                             class="mb-2 w-3/4 text-lg font-semibold tracking-tight text-gray-900 ">
                             {{ $item->title }}
                         </a>
-                        <img width="100px" height="60px" class="w-1/4 object-contain"
+                        <img class="w-1/4 object-contain rounded-lg"
                             src="{{ asset('storage') . '/' . $item->featured }}" alt="">
                     </div>
                 @endforeach
