@@ -5,7 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Profile
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'verified')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -42,6 +42,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/blog/delete/{id}', [BlogController::class, 'destroy'])->name('blog.delete');
 });
 Route::post('/comment', [CommentController::class, 'store'])->middleware(['auth'])->name('comment');
+
+// Email Verify
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 require __DIR__ . '/auth.php';
 Route::get('/{slug}', [BlogController::class, 'show'])->name('show_blog');
