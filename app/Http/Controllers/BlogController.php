@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BlogCreated;
 use App\Models\Blog;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -53,7 +55,7 @@ class BlogController extends Controller
         $user = Auth::user();
         $image_name = Str::uuid()->toString() . '.' . $request->file('featured')->extension();
         $image_path = $request->file('featured')->storeAs('images', $image_name, 'public');
-        Blog::create([
+        $post = Blog::create([
             'title' => $request->input('title'),
             'content' => $request->input('content'),
             'slug' => Str::slug($request->input('slug')),
@@ -62,6 +64,7 @@ class BlogController extends Controller
             'category_id' => $request->input('category_id')
 
         ]);
+        Mail::to(env('ADMIN_MAIL'))->send(new BlogCreated($post));
         return redirect()->route('dashboard');
     }
     public function edit(Request $request, $id)
@@ -92,6 +95,7 @@ class BlogController extends Controller
             }
             $post->update(['featured' => $image_path]);
         }
+
         return redirect()->route('dashboard');
     }
     public function destroy(Request $request, $id)

@@ -34,14 +34,14 @@ Route::middleware('auth', 'verified')->group(function () {
 });
 
 // Blog CRUD
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/blog', [BlogController::class, 'create'])->name(('blog.create'));
     Route::post('/blog', [BlogController::class, 'store'])->name('blog.store');
     Route::get('blog/{id}', [BlogController::class, 'edit'])->name('blog.edit');
     Route::post('blog/{id}', [BlogController::class, 'update'])->name('blog.update');
     Route::get('/blog/delete/{id}', [BlogController::class, 'destroy'])->name('blog.delete');
 });
-Route::post('/comment', [CommentController::class, 'store'])->middleware(['auth'])->name('comment');
+Route::post('/comment', [CommentController::class, 'store'])->middleware(['auth', 'verified'])->name('comment');
 
 // Email Verify
 Route::get('/email/verify', function () {
