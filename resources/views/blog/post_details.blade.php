@@ -61,8 +61,7 @@
                 <a href="{{ Route('home_categorized', $post->category->name) }}"
                     class="text-blue-700 text-sm font-bold uppercase pb-4"><i
                         class="fa fa-hashtag"></i>{{ $post->category->name }}</a>
-                <a href="#"
-                    class="text-4xl font-bold text-gray-800 hover:text-gray-700 pb-4">{{ $post->title }}</a>
+                <h1 class="text-4xl font-bold text-gray-800 hover:text-gray-700 pb-4">{{ $post->title }}</h1>
 
                 <div class="flex justify-start gap-5">
                     <p href="#" class="text-sm pb-8">
