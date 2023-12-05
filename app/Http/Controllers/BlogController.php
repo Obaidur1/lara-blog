@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\UpdateBlogView;
 use App\Mail\BlogCreated;
 use App\Models\Blog;
 use App\Models\Category;
@@ -32,8 +33,9 @@ class BlogController extends Controller
         $cookie_name = 'Blog_' . $post->id;
         if (Cookie::get($cookie_name) == '') {
             Cookie::queue($cookie_name, '1', 360);
-            $post->increment('views');
+            UpdateBlogView::dispatch($post);
         }
+
         $related_posts = Blog::where('category_id', $post->category_id)->where('id', '!=', $post->id)->limit(3)->get();
         $latest_posts = Blog::latest()->limit(6)->get();
         return view('blog.post_details', compact('post', 'related_posts', 'latest_posts'));
