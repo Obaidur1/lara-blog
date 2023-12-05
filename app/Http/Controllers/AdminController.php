@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,5 +21,11 @@ class AdminController extends Controller
     {
         $users = User::all();
         return view('admin.users', compact('users'));
+    }
+
+    function blogs()
+    {
+        $blogs = Blog::with('user', 'category')->get();
+        return view('admin.blogs', compact('blogs'));
     }
 }

@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
-    {{-- @livewireStyles --}}
+    @livewireStyles
+    @livewireScripts
 </head>
 
 <body class="bg-gray-100">
@@ -23,7 +24,7 @@
                         href="{{ Route('admin_overview') }}">Overview</a>
                 </li>
                 <li class= "hover: hover:text-indigo-600 rounded-md"><a href="{{ Route('admin_users') }}">Users</a></li>
-                <li class= "hover: hover:text-indigo-600 rounded-md"><a href="http://">Blogs</a></li>
+                <li class= "hover: hover:text-indigo-600 rounded-md"><a href="{{ Route('admin_blogs') }}">Blogs</a></li>
             </ul>
             <ul class="flex gap-10">
                 <li class= "hover: hover:text-indigo-600 rounded-md"><a href="{{ Route('home') }}">Home</a></li>
@@ -37,7 +38,7 @@
     </div>
 
     @livewire('wire-elements-modal')
-    @livewireScripts
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 </body>
 
