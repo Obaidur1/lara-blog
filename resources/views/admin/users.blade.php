@@ -139,9 +139,11 @@
                                     <td class="px-4 py-3">{{ $user->email }}</td>
                                     <td class="px-4 py-3">{{ ucfirst($user->user_role) }}</td>
 
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="updateProductButton" data-modal-target="updateProductModal"
-                                            data-modal-toggle="updateProductModal" class="underline">Edit</button>
+                                    <td class="px-4 py-3 ">
+                                        <button class="underline hover:text-indigo-700"
+                                            onclick="Livewire.dispatch('openModal', { component: 'user-update-modal',arguments:{id:{{ $user->id }}} })">Edit
+                                            User</button>
+
                                     </td>
                                 </tr>
                             @empty
@@ -210,5 +212,4 @@
             </div>
         </div>
     </section>
-    @include('admin.user_edit_modal')
 @endsection

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
+    {{-- @livewireStyles --}}
 </head>
 
 <body class="bg-gray-100">
@@ -35,6 +36,8 @@
         @yield('content')
     </div>
 
+    @livewire('wire-elements-modal')
+    @livewireScripts
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 </body>
 
