@@ -12,9 +12,9 @@ class BlogPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): void
+    public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -31,7 +31,7 @@ class BlogPolicy
     public function create(User $user): bool
     {
         // Log::info('User Role:', $user->user_role);
-        return $user->user_role == 'author';
+        return $user->user_role == 'author' or $user->user_role == 'admin';
     }
 
     /**
@@ -39,7 +39,7 @@ class BlogPolicy
      */
     public function update(User $user, Blog $blog): bool
     {
-        return $user->id == $blog->user_id;
+        return $user->id == $blog->user_id or $user->user_role == 'admin';
     }
 
     /**
@@ -47,7 +47,7 @@ class BlogPolicy
      */
     public function delete(User $user, Blog $blog): bool
     {
-        return $user->id == $blog->user_id;
+        return $user->id == $blog->user_id or $user->user_role == 'admin';
     }
 
     /**

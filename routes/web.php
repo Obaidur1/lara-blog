@@ -54,5 +54,5 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
+
 Route::get('/{slug}', [BlogController::class, 'show'])->name('show_blog');
